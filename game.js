@@ -5,22 +5,28 @@ const Entities = require('html-entities').XmlEntities;
 const entities = new Entities();
 const inquirer = require('inquirer')
 const request = require('axios')
+const chalk = require('chalk');
 const api = request.create({
     baseURL: 'https://opentdb.com/',
 })
 
-async function getQuiz(nbQuestions, type = 'boolean') {
+exports.launch = async function launchQuiz(nbQuestions, type = 'boolean') {
     try {
         let score = 0
         const response = await api.get('api.php?amount=' + nbQuestions + '&type=' + type)
-        const data = response.data
+        const data = response.data.results
         for (let i = 0; i < nbQuestions; i++) {
-            showQuestion(data.results[i])
-            let question = (type == 'boolean') ? await boolean() : await multiple(data.results[i])
-            if (isGoodAnswer(data.results[i].correct_answer, question.response))
+            showQuestion(data[i])
+            let question = (type == 'boolean') ? await boolean() : await multiple(data[i])
+            if (isGoodAnswer(data[i].correct_answer, question.response)) {
                 score += 1
+                console.log(chalk.green('Bravo !'))
+            }
+            else {
+                console.log(chalk.red.bold('Dommage...'))
+            }
         }
-        console.log("Score : ", score +'/' + nbQuestions)
+        console.log("\nScore : ", score +'/' + nbQuestions)
     }
     catch (error) {
         console.log(error.message)
@@ -30,7 +36,7 @@ async function getQuiz(nbQuestions, type = 'boolean') {
 function showQuestion(data) {
     console.log('\nCategory : ', data.category)
     console.log('Difficulty : ', data.difficulty)
-    console.log(entities.decode(data.question))
+    console.log('Question :\n', entities.decode(data.question))
 }
 
 function boolean() {
@@ -63,9 +69,9 @@ function shuffleArray(array) {
 }
 
 function isGoodAnswer(solution, answer) {
-    console.log('Your answer : ', answer)
+    // console.log('Your answer : ', answer)
     console.log('Good answer : ', solution)
     return solution.toLowerCase() == answer.toString().toLowerCase()
 }
 
-getQuiz(10)
+// launchQuiz(10)

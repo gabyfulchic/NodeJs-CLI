@@ -1,14 +1,20 @@
 #!/usr/bin/env node
 
 const request = require('axios');
+const program = require('commander')
+const game = require('./game')
 
-async function main(){
-    try{
-         const amount = await request.get("https://opentdb.com/api.php?amount=10")
-         console.log(amount)
-    }catch (e){
-       	 console.error("FAIL")
-    }
-}
+program
+    .version('1.0.0')
+    .option('-m, --multiple', 'Launch game with four possible answers')
 
-main();
+program.parse(process.argv)
+
+let nbQuestions = 10
+let type = 'boolean'
+
+if (program.multiple)
+    type = 'multiple'
+
+game.launch(nbQuestions, type)
+

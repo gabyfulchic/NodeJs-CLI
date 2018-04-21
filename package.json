@@ -18,11 +18,13 @@
   "homepage": "https://github.com/gabyfulchic/NodeJs-CLI#readme",
   "dependencies": {
     "axios": "^0.18.0",
+    "chalk": "^2.4.0",
+    "commander": "^2.15.1",
     "html-entities": "^1.2.1",
     "inquirer": "^5.2.0",
     "utf8": "^3.0.0"
   },
   "bin": {
-    "quiz": "./play_default.js"
+    "quiz": "./index.js"
   }
 }
