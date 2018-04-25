@@ -1,15 +1,30 @@
 {
-  "name": "njs-cli",
+  "name": "nodejs-cli",
   "version": "1.0.0",
-  "description": "",
+  "description": "Gaby Fulchic, Rémi Mafat",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabyfulchic/NodeJs-CLI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabyfulchic/NodeJs-CLI/issues"
+  },
+  "homepage": "https://github.com/gabyfulchic/NodeJs-CLI#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "chalk": "^2.4.0",
+    "commander": "^2.15.1",
+    "html-entities": "^1.2.1",
+    "inquirer": "^5.2.0",
+    "utf8": "^3.0.0"
   },
   "bin": {
-    "mycommand": "./index.js"
-  },
-  "dependencies": {
-    "axios": "^0.18.0"
+    "quiz": "./index.js"
   }
 }
