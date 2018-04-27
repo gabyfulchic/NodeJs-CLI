@@ -1,8 +1,10 @@
+#!/usr/bin/env node
+
 const request = require('axios')
 const chalk = require('chalk')
 const baseEndPoint = 'https://opentdb.com/api'
 
-async function listCategories(){
+export async function listCategories(){
 	try{
 		const categoriesRequest = await request.get(baseEndPoint+'_category.php')
 

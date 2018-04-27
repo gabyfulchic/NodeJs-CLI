@@ -9,7 +9,7 @@ const api = request.create({
     baseURL: 'https://opentdb.com/',
 })
 
-exports.launch = async function launchQuiz(nbQuestions, type = 'boolean', apiCall) {
+exports.launch = async function launchQuiz(nbQuestions, type = 'boolean', apiCall, ctgId) {
     try {
         let score = 0
         const response = await api.get(apiCall)
@@ -30,6 +30,7 @@ exports.launch = async function launchQuiz(nbQuestions, type = 'boolean', apiCal
     catch (error) {
         console.log(error.message)
     }
+
 }
 
 function showQuestion(data) {
