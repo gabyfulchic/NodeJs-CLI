@@ -12,6 +12,9 @@ const api = request.create({
 exports.launch = async function launchQuiz(nbQuestions, type = 'boolean', apiCall, ctgId) {
     try {
         let score = 0
+        if (ctgId){
+            return null
+        }
         const response = await api.get(apiCall)
         const data = response.data.results
         for (let i = 0; i < nbQuestions; i++) {

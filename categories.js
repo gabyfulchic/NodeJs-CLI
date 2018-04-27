@@ -4,7 +4,7 @@ const request = require('axios')
 const chalk = require('chalk')
 const baseEndPoint = 'https://opentdb.com/api'
 
-export async function listCategories(){
+exports.lister = async function listCategories(){
 	try{
 		const categoriesRequest = await request.get(baseEndPoint+'_category.php')
 
@@ -17,5 +17,3 @@ export async function listCategories(){
 		console.error(e.message)
 	}
 }
-
-listCategories()

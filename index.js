@@ -2,8 +2,8 @@
 
 const program = require('commander')
 const game = require('./game')
-const categories = require('./categories')
-
+var categories = require('./categories')
+ 
 program
     .version('1.0.0', '-v, --version')
     .option('-n, --number <number>', 'Number of questions', parseInt)
@@ -28,7 +28,7 @@ let apiCall = 'api.php?amount=' + nbQuestions + '&type=' + type
 if (program.difficulty) 
     apiCall += '&difficulty=' + program.difficulty
 if (program.listCategories)
-	categories.listCategories()
+	categories.lister()
 if (program.category)
 	ctgId = program.category
 
