@@ -2,30 +2,9 @@
 
 const program = require('commander')
 const game = require('./game')
-
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('quiz.db', (error) => {
-    if (error) 
-        console.log(err.message)
-    console.log('Connection to the quiz database...')
-})
- 
-db.serialize(function() {
-//   db.run("CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, token TEXT)")
-//   db.run("CREATE TABLE scores (id INTEGER PRIMARY KEY AUTOINCREMENT, score INTEGER, date TEXT, user_id INTEGER REFERENCES user(id) ON DELETE CASCADE)")
- 
-//   var stmt = db.prepare("INSERT INTO user (name, token) VALUES (?, ?)");
-//   stmt.run('toto', 'token');
-//   stmt.finalize();
- 
-  db.each("SELECT id, name FROM user", function(err, row) {
-      console.log(row.id + ": " + row.name);
-  });
-});
- 
-db.close();
-
-var categories = require('./categories')
+const dbManager = require('./dBManager.js')
+const fileManager = require('./fileManager.js')
+const categories = require('./categories')
  
 program
     .version('1.0.0', '-v, --version')
@@ -35,6 +14,7 @@ program
     .option('-u, --username <username>', 'What\'s your username ? ')
     .option('-l, --listCategories', 'Listing all the categories and their id')
     .option('-c, --category <number>', 'Choose your category by his id, to list them enter --listCategories', parseInt)
+    .option('-e, --export [user]', 'Export all scores or user\'s scores', String)
 
 program.parse(process.argv)
 
@@ -43,22 +23,31 @@ let type = 'boolean'
 let user = false
 let ctgId = null
 
+if (program.listCategories){
+    categories.lister()
+    return
+}
+if (program.export) {
+    fileManager.writeScore(program.export)
+    return 
+}
+    
 if (program.number) 
     nbQuestions = program.number
 if (program.multiple) 
     type = 'multiple'    
-if (program.username)
+if (program.username) {
     user = program.username
-
+    dbManager.checkUser(user)
+}
+    
 let apiCall = 'api.php?amount=' + nbQuestions + '&type=' + type
 
 if (program.difficulty) 
     apiCall += '&difficulty=' + program.difficulty
-if (program.listCategories)
-	categories.lister()
 if (program.category)
 	ctgId = program.category
 
     
-game.launch(nbQuestions, type, apiCall, ctgId)
+game.launch(nbQuestions, type, apiCall, ctgId, user)
 

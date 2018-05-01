@@ -10,7 +10,7 @@ const api = request.create({
     baseURL: 'https://opentdb.com/',
 })
 
-exports.launch = async function launchQuiz(nbQuestions, type, apiCall, ctgId, user = null) {
+exports.launch = async function launchQuiz(nbQuestions, type, apiCall, ctgId, user) {
     try {
         let score = 0
         if (ctgId){
@@ -31,12 +31,11 @@ exports.launch = async function launchQuiz(nbQuestions, type, apiCall, ctgId, us
         }
         console.log("\nScore : ", score +'/' + nbQuestions)
         if (user) 
-            dbManager.insertScore(user, score)
+            dbManager.insert(user, score +'/' + nbQuestions)
     }
     catch (error) {
         console.log(error.message)
     }
-
 }
 
 function showQuestion(data) {

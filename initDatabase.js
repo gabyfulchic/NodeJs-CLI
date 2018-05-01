@@ -10,7 +10,7 @@ db.serialize(function() {
     db.run("DROP TABLE scores")
     db.run("DROP TABLE user")
     db.run("CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, token TEXT)")
-    db.run("CREATE TABLE scores (id INTEGER PRIMARY KEY AUTOINCREMENT, score INTEGER, date TEXT, user_id INTEGER REFERENCES user(id) ON DELETE CASCADE)")
+    db.run("CREATE TABLE scores (id INTEGER PRIMARY KEY AUTOINCREMENT, score TEXT, date TEXT, user_id INTEGER REFERENCES user(id) ON DELETE CASCADE)")
 });
  
 db.close();
