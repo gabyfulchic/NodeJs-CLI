@@ -10,7 +10,7 @@ exports.lister = async function listCategories(){
 
 		for(const [index, item] of categoriesRequest.data.trivia_categories.entries()){
 			categoryId = index // variable pour nous indiquer à quoi correspond l'index ;)
-			console.log(categoryId+"- ", chalk.green(item.name+"\n"))
+			console.log(categoryId+" -", chalk.green(item.name))
 		}
 
 	}catch(e){

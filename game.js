@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const dbManager = require('./dBManager.js')
 const Entities = require('html-entities').XmlEntities;
 const entities = new Entities();
 const inquirer = require('inquirer')
@@ -9,7 +10,7 @@ const api = request.create({
     baseURL: 'https://opentdb.com/',
 })
 
-exports.launch = async function launchQuiz(nbQuestions, type = 'boolean', apiCall, ctgId) {
+exports.launch = async function launchQuiz(nbQuestions, type, apiCall, ctgId, user) {
     try {
 
         let score = 0
@@ -28,11 +29,12 @@ exports.launch = async function launchQuiz(nbQuestions, type = 'boolean', apiCal
             }
         }
         console.log("\nScore : ", score +'/' + nbQuestions)
+        if (user) 
+            dbManager.insert(user, score +'/' + nbQuestions)
     }
     catch (error) {
         console.log(error.message)
     }
-
 }
 
 function showQuestion(data) {
