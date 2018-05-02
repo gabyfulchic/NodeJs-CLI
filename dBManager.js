@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const dateFormat = require('dateformat');
+const fileManager = require('./fileManager.js')
 
 function getDb() {
     return db = new sqlite3.Database('quiz.db', (error) => {
@@ -8,7 +9,7 @@ function getDb() {
     })
 }
 
-function getUserId(user, score, callback) {
+function getUserId(user, callbackParam, callback) {
     let db = getDb()
     var userId
     db.serialize(function() {
@@ -17,7 +18,7 @@ function getUserId(user, score, callback) {
             if (error)
                 return console.log(error.message)
             else {
-                callback(row.id, score)
+                callback(row.id, callbackParam)
             } 
         })
     })
@@ -37,33 +38,47 @@ function insertScore(userId, score) {
     db.close()
 }
 
-exports.showLastScores = function exportLastScores(limit){ showLastScores(limit) }
+exports.showLastScores = function exportLastScores(limit, filename){ showLastScores(limit, filename) }
 
-function showLastScores(limit) {
+function showLastScores(limit, filename = false) {
     let db = getDb()
-    let datas = []
+    let datas = ["Last scores"]
     let sql = "SELECT s.score, s.date, u.name FROM scores s JOIN user u ON u.id = s.user_id ORDER BY s.date DESC LIMIT "+ limit
     db.each(sql, function(err, row) {
+        if (err)
+            return console.log(err.message)
         let dataRow = row.name + ' ' + row.score + ' ' + row.date
-        datas.push(dataRow)
-        console.log(dataRow);
+        datas.push("\r\n" + dataRow)
+        if (!filename) 
+            console.log(dataRow);
+    }, function() {
+        if (filename) 
+            fileManager.write(datas, filename)
     })
-    return datas
 }
 
-exports.showScores = function showScores(user) {
+exports.exportScores = function (user, filename) {
+    getUserId(user, filename, showScores)
+}
+
+function showScores(userId, filename = false) {  
     let db = getDb()
-    let datas = []
-    let sql = "SELECT s.score, s.date, u.name FROM scores s JOIN user u ON u.id = s.user_id WHERE u.name = " + user + " ORDER BY s.date DESC"
+    let datas = ["User's score"]
+    let sql = "SELECT s.score, s.date, u.name FROM scores s JOIN user u ON u.id = s.user_id WHERE s.user_id = " + userId + " ORDER BY s.date DESC"
     db.each(sql, function(err, row) {
+        if (err)
+            return console.log(err.message)
         let dataRow = row.name + ' ' + row.score + ' ' + row.date
-        datas.push(dataRow)
-        console.log(dataRow);
-    });
-    return datas
+        datas.push("\r\n" + dataRow)
+        if (!filename) 
+            console.log(row);
+    }, function() {
+        if (filename) 
+            fileManager.write(datas, filename)
+    })
 }
 
-function showUsers() {
+exports.showUsers = function showUsers() {
     let db = getDb()
     db.each("SELECT id, name FROM user", function(err, row) {
         console.log(row.id, row.name);
@@ -98,7 +113,7 @@ exports.checkUser = function checkUser(username) {
             if (error)
                 addUser(username)
             if (row) 
-                console.log('Hello ', username)
+                console.log('Hello', username)
             else 
                 addUser(username)
         })

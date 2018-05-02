@@ -1,0 +1,6 @@
+User's score,
+toto 1/2 Wednesday 2nd May 2018 - 21:05:07,
+toto 5/10 Wednesday 2nd May 2018 - 10:35:45,
+toto 1/2 Tuesday 1st May 2018 - 22:02:47,
+toto 0/2 Tuesday 1st May 2018 - 22:02:37,
+toto 2/2 Tuesday 1st May 2018 - 21:59:29

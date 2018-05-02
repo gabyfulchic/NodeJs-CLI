@@ -7,19 +7,21 @@ exports.writeScore = function writeScore(user) {
         let datas
         if (String(user) == 'true') { // Pas d'user précisé
             filename = 'scores.txt'
-            datas = dbManager.exportLastScores(100)
+            datas = dbManager.showLastScores(100, filename)
         }
         else {
             filename = 'scores_' + user + '.txt'
-            datas = dbManager.showScores(user)
+            datas = dbManager.exportScores(user, filename)
         }
-        fs.writeFile(filename, datas, (error) => {
-            if (error) throw error
-            console.log("Scores écrits sur le fichier ", filename)
-        })
     }
     catch (error) {
         console.log("Erreur lors de l'écriture du fichier")
     }
 }
 
+exports.write = function write(datas, filename) {
+    fs.writeFile(filename, datas, (error) => {
+        if (error) throw error
+        console.log("Scores écrits sur le fichier ", filename)
+    })
+}

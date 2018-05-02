@@ -10,12 +10,14 @@ const api = request.create({
     baseURL: 'https://opentdb.com/',
 })
 
-exports.launch = async function launchQuiz(nbQuestions, type, apiCall, ctgId, user) {
+exports.launch = async function launchQuiz(nbQuestions, type, apiCall, user) {
     try {
-
         let score = 0
-
         const response = await api.get(apiCall)
+
+        if (errorExist(response.data.response_code))
+            return;
+
         const data = response.data.results
         for (let i = 0; i < nbQuestions; i++) {
             showQuestion(data[i])
@@ -77,5 +79,14 @@ function isGoodAnswer(solution, answer) {
     console.log('Good answer : ', solution)
     return solution.toLowerCase() == answer.toString().toLowerCase()
 }
+
+function errorExist(responseCode)  {
+    switch (responseCode) {
+        case 1:  console.log(chalk.red('0 questions has been found for your request')); return true
+        case 2: console.log(chalk.red('Some parameters are invalids')); return true
+        default: return false
+    }
+}
+
 
 // launchQuiz(10)
