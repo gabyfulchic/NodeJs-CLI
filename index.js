@@ -3,6 +3,7 @@
 const program = require('commander')
 const game = require('./game')
 var categories = require('./categories')
+const chalk = require('chalk')
  
 program
     .version('1.0.0', '-v, --version')
@@ -17,21 +18,33 @@ program.parse(process.argv)
 let nbQuestions = 10
 let type = 'boolean'
 let ctgId = null
+let listThemAll = {}
 
 if (program.number) 
     nbQuestions = program.number
 if (program.multiple) 
     type = 'multiple'
 
-let apiCall = 'api.php?amount=' + nbQuestions + '&type=' + type
+let apiCall = 'api.php?amount=' + nbQuestions// + '&type=' + type
 
 if (program.difficulty) 
     apiCall += '&difficulty=' + program.difficulty
 if (program.listCategories)
 	categories.lister()
-if (program.category)
-	ctgId = program.category
+if (/^[0-9]*$/.test(program.category)==true) {
 
+    ctgId = program.category + 9
+    apiCall += '&category='+ctgId 
+    console.log(apiCall)
+
+    if (/^[0-9]*$/.test(ctgId)==false){
+        
+    }
+}else if (/^[0-9]*$/.test(program.category)==false){
+    console.log(chalk.red("You must choose a category ID, check them by using quiz --listCategories !"))
+}
+	
     
-game.launch(nbQuestions, type, apiCall, ctgId)
+    
+game.launch(nbQuestions, type, apiCall)
 

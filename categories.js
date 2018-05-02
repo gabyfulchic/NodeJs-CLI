@@ -17,3 +17,20 @@ exports.lister = async function listCategories(){
 		console.error(e.message)
 	}
 }
+
+exports.getAll = async function getCategories(){
+
+	let ctgDictionnary = {}
+	try{
+		const categoriesRequest = await request.get(baseEndPoint+'_category.php')
+		
+		for(const [index, item] of categoriesRequest.data.trivia_categories.entries()){
+            ctgDictionnary[index] = item.name
+        }
+
+        return ctgDictionnary;
+
+	}catch(e){
+		console.error(e.message)
+	}
+}
