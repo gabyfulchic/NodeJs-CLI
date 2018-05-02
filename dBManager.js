@@ -16,7 +16,7 @@ function getUserId(user, callbackParam, callback) {
         let sql = `SELECT id FROM user WHERE name = ?`
         db.get(sql, [user], (error, row) => {
             if (error)
-                return console.log(error.message)
+                return console.log("Aucun utilisateur ne correspond")
             else {
                 callback(row.id, callbackParam)
             } 
