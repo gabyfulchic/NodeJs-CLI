@@ -25,6 +25,7 @@ let type = 'boolean'
 let user = false
 let ctgId = null
 let listThemAll = {}
+const verifyNumber = /^[0-9]*$/
 
 if (program.listCategories){
     categories.lister()
@@ -38,8 +39,9 @@ if (program.export) {
     fileManager.writeScore(program.export)
     return 
 }
+
     
-if (program.number) 
+if (verifyNumber.test(program.number)) 
     nbQuestions = program.number
 if (program.multiple) 
     type = 'multiple'
@@ -48,18 +50,18 @@ if (program.username) {
     dbManager.checkUser(user)
 }
 
-let apiCall = 'api.php?amount=' + nbQuestions + '&type=' + type
+let apiCall = 'api.php?amount=' + nbQuestions +'&type=' + type
 
 if (program.difficulty) 
     apiCall += '&difficulty=' + program.difficulty
 if (program.listCategories)
 	categories.lister()
 
-if (/^[0-9]*$/.test(program.category)) {
+if (verifyNumber.test(program.category)) {
     let category = program.category + 9
     apiCall += '&category=' + category
 }   
     
-console.log("quiz -h to showing all options")
+console.log(chalk.yellow("quiz -h to showing all options"))
 game.launch(nbQuestions, type, apiCall, user)
 

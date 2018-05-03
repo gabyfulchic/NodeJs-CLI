@@ -13,6 +13,7 @@ const api = request.create({
 exports.launch = async function launchQuiz(nbQuestions, type, apiCall, user) {
     try {
         let score = 0
+        
         const response = await api.get(apiCall)
 
         if (errorExist(response.data.response_code))

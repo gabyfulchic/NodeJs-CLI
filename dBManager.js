@@ -1,6 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
 const dateFormat = require('dateformat');
 const fileManager = require('./fileManager.js')
+const chalk = require('chalk');
+
+const verifyString = /^[a-zA-Z]+$/;
 
 function getDb() {
     return db = new sqlite3.Database('quiz.db', (error) => {
@@ -12,17 +15,22 @@ function getDb() {
 function getUserId(user, callbackParam, callback) {
     let db = getDb()
     var userId
-    db.serialize(function() {
-        let sql = `SELECT id FROM user WHERE name = ?`
-        db.get(sql, [user], (error, row) => {
-            if (error)
-                return console.log("Aucun utilisateur ne correspond")
-            else {
-                callback(row.id, callbackParam)
-            } 
+    if (verifyString.test(user)){
+        db.serialize(function() {
+            let sql = `SELECT id FROM user WHERE name = ?`
+            db.get(sql, [user], (error, row) => {
+                if (error)
+                    return console.log("Aucun utilisateur ne correspond")
+                else {
+                    callback(row.id, callbackParam)
+                } 
+            })
         })
-    })
-    db.close()
+        db.close()
+    }else{
+        console.error(chalk.red("\nAnnulation de la création de l'utilisateur : "+user+" ..."))
+        return
+    }
 }
 
 function insertScore(userId, score) {
@@ -95,14 +103,19 @@ exports.insert = async function insert(user, score) {
 }
 
 function addUser(username) {
-    let db = getDb()
-    db.serialize(function() {
-        var stmt = db.prepare("INSERT INTO user (name, token) VALUES (?, ?)");
-        stmt.run(username, null);
-        stmt.finalize();
-        console.log("Création de l'utilisateur " + username + "...")
-        console.log("Bienvenue !")
-    })
+    
+    if (verifyString.test(username)){
+        let db = getDb()
+        db.serialize(function() {
+            var stmt = db.prepare("INSERT INTO user (name, token) VALUES (?, ?)");
+            stmt.run(username, null);
+            stmt.finalize();
+            console.log("Création de l'utilisateur " + username + "...")
+            console.log("Bienvenue !")
+        })
+    }else{
+        console.error(chalk.red("\nVeuillez entrer un nom d'utilisateur correcte comprenant seulement des lettres !"))
+    }    
 }
 
 exports.checkUser = function checkUser(username) {
